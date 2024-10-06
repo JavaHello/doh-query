@@ -15,10 +15,6 @@ pub struct Config {
     #[clap(long, default_value = "3")]
     pub retries: u8,
 
-    /// The custom DNS server to use
-    #[clap(short, long)]
-    pub custom_server: Option<String>,
-
     /// The type of record to resolve
     #[clap(short, long, default_value = "A")]
     pub r#type: String,

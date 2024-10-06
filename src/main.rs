@@ -16,22 +16,17 @@ async fn main() {
     let mut dns = Dns::from_client(client, config.retries);
 
     let server = config.server;
-    let custom_server = config.custom_server;
     match server.as_str() {
         "google" => dns.add_server(DnsHttpsServer::Google),
         "cloudflare" => dns.add_server(DnsHttpsServer::Cloudflare),
         "quad9" => dns.add_server(DnsHttpsServer::Quad9),
-        "custom" => {
-            let server = custom_server.expect("Custom server not provided");
-            dns.add_server(DnsHttpsServer::custom("Custom".to_string(), server));
-        }
         "all" => {
             dns.add_server(DnsHttpsServer::Google);
             dns.add_server(DnsHttpsServer::Cloudflare);
             dns.add_server(DnsHttpsServer::Quad9);
-            if let Some(server) = custom_server {
-                dns.add_server(DnsHttpsServer::custom("Custom".to_string(), server));
-            }
+        }
+        s if s.starts_with("http") => {
+            dns.add_server(DnsHttpsServer::custom("Custom".to_string(), server));
         }
         _ => {
             println!("Invalid server, using default servers");
